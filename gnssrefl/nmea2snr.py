@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-convert nmea files to snr files 
+This code is missing full documentation.
+
 """
 from __future__ import division
 import numpy as np 
@@ -21,10 +22,8 @@ def NMEA2SNR(locdir, fname, snrfile, csnr):
         directory where your SNR files are kept
     fname : string
         NMEA filename 
-
     snrfile : str
         name of output file for SNR data
-
     csnr : str
         snr option, i.e. '66' or '99'
         
@@ -225,7 +224,10 @@ def read_nmea(fname):
         if 'RMC' in line: #Get timing info
             row = line.split(',')
             #sect = int(float(row[1][0:2]) * 60 * 60 + float(row[1][2:4]) * 60 + float(row[1][4:])) #Time in seconds
-            curdt = datetime.datetime(int(row[9][4:6])+2000,int(row[9][2:4]),int(row[9][0:2])) #Current date
+            try:
+                curdt = datetime.datetime(int(row[9][4:6])+2000,int(row[9][2:4]),int(row[9][0:2])) #Current date
+            except:
+                pass
         
         if not curdt: #Skip forward until the first 'RMC' instance which gives a proper date to store
             continue
@@ -240,7 +242,6 @@ def read_nmea(fname):
                 
             #This could be added if positioning info is interesting/needed. Via https://github.com/purnelldj/gnssr_lowcost
             #   row = line.split(',')
-            #   latt = float(row[2][0:2]) + float(row[2][2:])/60
             #   if row[3] == 'S': #Northern or southern hemisphere
             #        latt = -latt
             #   lont = float(row[4][0:3]) + float(row[4][3:])/60 #Longitude
@@ -541,7 +542,7 @@ def elev_limits(snroption):
     elif (snroption == 66):
         emin = 0; emax = 30
     elif (snroption == 88):
-        emin = 5; emax = 90
+        emin = 0; emax = 90
     else:
         emin = 5; emax = 30
 
